@@ -79,6 +79,7 @@ class MasterGear():
         fp.W_s = W_s
 
 
+
 class ViewProviderSlaveGear():
     def __init__(self, obj):
         obj.Proxy = self
@@ -174,7 +175,7 @@ class SlaveMasterGear():
 
     def execute(self, fp):
         if self.betaChanged is False:
-            inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL)
+            inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL,fp.addendum_master,fp.addendum_slave)
             cD = commonData()
             master = gearData()
             slave = gearData()
@@ -291,7 +292,7 @@ class InternalGear():
         fp.addProperty('App::PropertyLength', 'extThickness', '1 - Gears Parameters', 'External thickness').extThickness = form[0].doubleSpinBox_7.text()
 
     def execute(self, fp):
-        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL)
+        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL,fp.addendum_master)
         cD = commonData()
         master = gearData()
         slave = gearData()
@@ -347,7 +348,7 @@ class MasterBevelGear():
         addMasterProperties(fp, form[0], form[1], True)
 
     def execute(self, fp):
-        inputData = inputDataClass_b(fp.m.Value, fp.rho.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.thickness.Value, fp.Sigma.Value, fp.c, fp.deltatp.Value, fp.n, fp.iL)
+        inputData = inputDataClass_b(fp.m.Value, fp.rho.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.thickness.Value, fp.Sigma.Value, fp.c, fp.deltatp.Value, fp.n, fp.iL,fp.addendum_master)
         cD = commonData_b()
         master = gearData_b()
         slave = gearData_b()
@@ -355,6 +356,9 @@ class MasterBevelGear():
         mainCalculations_b(inputData, cD, master, slave)
 
         getProfile_b(master, slave, cD)
+
+        inputData = inputDataClass_b(fp.m.Value, fp.rho.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.thickness.Value, fp.Sigma.Value, fp.c_slave, fp.deltatp.Value, fp.n, fp.iL,fp.addendum_slave)
+        mainCalculations_b(inputData, cD, master, slave)
         getProfile_b(slave, master, cD)
 
         loadProperties(fp, cD, master, slave, True)
